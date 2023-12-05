@@ -1,0 +1,119 @@
+let modalWidth = 300;
+let modalHeight = 200;
+let fontSize = 16;
+let modalVisible = true;
+
+function setup() {
+  createCanvas(400, 300);
+  noLoop(); // draw()를 자동으로 호출하지 않도록 설정
+}
+
+function draw() {
+  background(240);
+
+  if (modalVisible) {
+    // 모달 창 그리기
+    fill(193, 193, 193);
+    rect((width - modalWidth) / 2, (height - modalHeight) / 2, modalWidth, modalHeight, 10, 10, 0, 0); // 사각형으로 변경
+
+    // 그림자 효과
+    let shadowDistance = 1.5; 
+    fill(0, 50); // 그림자 색상
+    for (let i = 0; i < shadowDistance; i++) {
+      rect(
+        (width - modalWidth) / 2 + modalWidth - 1 + i,
+        (height - modalHeight) / 2 + i,
+        1,
+        modalHeight - 2 * i
+      ); // 우측 그림자
+      rect(
+        (width - modalWidth) / 2 + i,
+        (height - modalHeight) / 2 + modalHeight - 1 + i,
+        modalWidth - 2 * i,
+        1
+      ); // 하단 그림자
+    }
+
+    // 모달 헤더
+    fill(0, 0, 128); // 파란색
+    rect((width - modalWidth) / 2, (height - modalHeight) / 2, modalWidth, 30);
+
+    // 헤더 텍스트 (왼쪽 정렬)
+    fill(255);
+    textSize(18);
+    textStyle(BOLD);
+    textAlign(LEFT, CENTER);
+    text('Error', (width - modalWidth) / 2 + 10, (height - modalHeight) / 2 + 15);
+
+    let closeButtonSize = 20;
+    // X 버튼
+    fill(193, 193, 193);
+    rect(
+      (width - modalWidth) / 2 + modalWidth - closeButtonSize-3,
+      (height - modalHeight) / 2+2,
+      closeButtonSize,
+      closeButtonSize
+    );
+
+    fill(0);
+    textSize(16);
+    textStyle(BOLD);
+    textAlign(CENTER, CENTER);
+    text('X', (width - modalWidth) / 2 + modalWidth - closeButtonSize / 2-3, (height - modalHeight) / 2 + closeButtonSize / 2+3);
+    //_ 버튼 
+
+    fill(193, 193, 193);
+    rect(
+      (width - modalWidth) / 2 + modalWidth - (closeButtonSize * 2)-5,
+      (height - modalHeight) / 2+2,
+      closeButtonSize,
+      closeButtonSize
+    );
+
+    fill(0);
+    textSize(closeButtonSize);
+    textAlign(CENTER, CENTER);
+    text('_', (width - modalWidth) / 2 + modalWidth - (closeButtonSize * 2)+5 , (height - modalHeight) / 2 + closeButtonSize / 2 - 1);
+
+    // 텍스트 스타일 설정
+    textSize(fontSize);
+    textAlign(CENTER, CENTER);
+    textStyle(NORMAL);
+    fill(0);
+
+    // 오류 메시지
+    let errorMessage = "Some sort of error - File Not Found\n\nPress OK to close the error.";
+    text(errorMessage, width / 2, (height - modalHeight) / 2 + 90);
+
+    // OK 버튼
+    fill(186, 188, 185);
+    rect(modalWidth / 2, (height - modalHeight) / 2 + modalHeight - 50, modalWidth / 3, 30);
+    fill(0);
+    textSize(14);
+    text('OK', width / 2, (height - modalHeight) / 2 + modalHeight - 35);
+  }
+}
+
+function mousePressed() {
+  // 마우스 클릭으로 닫기 버튼이 눌리면 모달 창 닫기
+  if (
+    mouseX > (width - modalWidth) / 2 + modalWidth - 30 &&
+    mouseX < (width - modalWidth) / 2 + modalWidth &&
+    mouseY > (height - modalHeight) / 2 &&
+    mouseY < (height - modalHeight) / 2 + 30
+  ) {
+    modalVisible = false;
+    redraw(); // 모달 창을 닫을 때만 다시 그림
+  }
+
+  // 마우스 클릭으로 OK 버튼이 눌리면 모달 창 닫기
+  if (
+    mouseX > (width - modalWidth) / 2 + 10 &&
+    mouseX < (width - modalWidth) / 2 + modalWidth - 10 &&
+    mouseY > (height - modalHeight) / 2 + modalHeight - 40 &&
+    mouseY < (height - modalHeight) / 2 + modalHeight - 10
+  ) {
+    modalVisible = false;
+    redraw(); // 모달 창을 닫을 때만 다시 그림
+  }
+}
