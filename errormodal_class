@@ -65,7 +65,7 @@ class ErrorModal {
     let closeButtonSize = 20;
 
     this.drawButton(x + this.modalWidth - closeButtonSize - 8, y + 7, 'X');
-    this.drawButton(x + this.modalWidth - (closeButtonSize * 2) - 10, y + 7, '_');
+    this.drawButton(x + this.modalWidth - (closeButtonSize * 2) - 10, y +7 , '_');
   }
 
   drawButton(x, y, label) {
@@ -73,10 +73,10 @@ class ErrorModal {
     rect(x, y, 20, 20);
 
     fill(0);
-    textSize(16);
-    textStyle(BOLD);
+    textSize(14);
+    textStyle(NORMAL);
     textAlign(CENTER, CENTER);
-    text(label, x + 10, y + 12);
+    text(label, x + 10, y + 10);
   }
 
   drawText() {
@@ -100,7 +100,16 @@ class ErrorModal {
   }
 
  mousePressed() {
-    if (this.modalVisible) {
+    let modalX = (width - this.modalWidth) / 2;
+    let modalY = (height - this.modalHeight) / 2;
+
+    if (
+      this.modalVisible &&
+      mouseX > modalX &&
+      mouseX < modalX + this.modalWidth &&
+      mouseY > modalY &&
+      mouseY < modalY + this.modalHeight
+    ) {
       this.modalVisible = false;
       redraw();
     }
