@@ -1,0 +1,131 @@
+class ErrorModal {
+  constructor() {
+    this.modalWidth = 300;
+    this.modalHeight = 200;
+    this.fontSize = 16;
+    this.fontLoaded = false;
+    this.modalVisible = true;
+
+    // Load font asynchronously
+    this.font = loadFont("Galmuri11-Bold.ttf", () => {
+      this.fontLoaded = true;
+      redraw();
+    });
+  }
+
+  draw() {
+    if (!this.fontLoaded) {
+      // Wait for the font to load
+      return;
+    }
+
+    push();
+    stroke(0); // Set outline color to black
+    strokeWeight(1);
+    fill(193, 193, 193);
+
+    let modalX = (width - this.modalWidth) / 2;
+    let modalY = (height - this.modalHeight) / 2;
+
+    rect(modalX, modalY, this.modalWidth, this.modalHeight, 0, 0, 0, 0);
+
+    this.drawShadow(modalX, modalY);
+    this.drawHeader(modalX, modalY);
+    this.drawButtons(modalX, modalY);
+    this.drawText();
+    pop();
+  }
+
+  drawShadow(x, y) {
+    let shadowDistance = 1;
+    fill(0, 50);
+
+    for (let i = 0; i < shadowDistance; i++) {
+      rect(x + this.modalWidth - 1 + i, y + i, 1, this.modalHeight - 2 * i);
+      rect(x + i, y + this.modalHeight - 1 + i, this.modalWidth - 2 * i, 1);
+    }
+  }
+
+  drawHeader(x, y) {
+    push();
+    fill(0, 0, 128);
+    noStroke();
+    rect(x + 3, y + 3, this.modalWidth - 8, 35);
+    pop();
+
+    fill(255);
+    textSize(18);
+    textStyle(NORMAL);
+    textFont(this.font);
+    textAlign(LEFT, CENTER);
+    text('Error', x + 15, y + 20);
+  }
+
+  drawButtons(x, y) {
+    let closeButtonSize = 20;
+
+    this.drawButton(x + this.modalWidth - closeButtonSize - 8, y + 7, 'X');
+    this.drawButton(x + this.modalWidth - (closeButtonSize * 2) - 10, y + 7, '_');
+  }
+
+  drawButton(x, y, label) {
+    fill(193, 193, 193);
+    rect(x, y, 20, 20);
+
+    fill(0);
+    textSize(16);
+    textStyle(BOLD);
+    textAlign(CENTER, CENTER);
+    text(label, x + 10, y + 12);
+  }
+
+  drawText() {
+    textSize(this.fontSize - 2);
+    textAlign(CENTER, CENTER);
+    textStyle(NORMAL);
+    fill(0);
+
+    let errorMessage = "Some sort of error - File Not Found\n\nPress OK to close the error.";
+    text(errorMessage, width / 2, (height - this.modalHeight) / 2 + 90);
+
+    fill(186, 188, 185);
+    rect(this.modalWidth / 2, (height - this.modalHeight) / 2 + this.modalHeight - 50, this.modalWidth / 3, 30);
+    fill(0);
+    textSize(14);
+    text('OK', width / 2, (height - this.modalHeight) / 2 + this.modalHeight - 35);
+  }
+
+  isButtonClicked(x, y, w, h) {
+    return mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h;
+  }
+
+ mousePressed() {
+    if (this.modalVisible) {
+      this.modalVisible = false;
+      redraw();
+    }
+  }
+}
+
+
+let errorModal;
+
+function setup() {
+  createCanvas(400, 300, WEBGL);
+  noLoop();
+  errorModal = new ErrorModal();
+}
+
+function draw() {
+  background(190);
+  translate(-200, -150);
+
+  if (errorModal.modalVisible) {
+    errorModal.draw();
+  }
+}
+
+function mousePressed() {
+  errorModal.mousePressed();
+}
+
